@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html ng-app="user">
+  <head>
+    <base href="."><base/>
+    <title>Simple AngularJS Test</title>
+    <link rel="stylesheet" href="res/css/foundation.min.css" type="text/css" />
+    <link rel="stylesheet" href="res/css/main.css" type="text/css" />
+    <link rel="stylesheet" href="res/css/ng-animation.css" type="text/css" />
+
+    <script type="text/javascript" src="res/js/angular.min.js"></script>
+    <script type="text/javascript" src="res/js/angular-route.js"></script>
+    <script type="text/javascript" src="res/js/angular-resource.js"></script>
+    <script type="text/javascript" src="res/js/angular-animate.js"></script>
+
+    <meta charset="utf-8" />
+
+  </head>
+
+  <body>
+
+
+    <label id="scope-highlighting-checkbox" ng-controller="scopeHighlighterCtrl as scctrl">
+      <input ng-click="scctrl.toggleScopeHighlighting()" ng-model="scctrl.doHighlightScopes" type="checkbox" name="scope-highlight-checkbox" value="" />
+      <span>Highlight scopes</span>
+    </label>
+
+    <div ng-controller="showsCtrl as shctrl" class="row">
+      <h1>Simple List</h1>
+
+      <ul id="tv-or-radio-show-list" class="no-bullet">
+
+        <li>
+          <div class="row">
+            <div class="columns large-2 large-centered">
+              <a ng-hide="shctrl.doShowForm" ng-click="shctrl.doShowForm = true" href="#">Add show</a>
+            </div>
+          </div>
+        </li>
+
+        <li id="add-new-show-form" ng-show="shctrl.doShowForm">
+          <div class="row">
+            <form ng-cloak ng-submit="shctrl.addNewShow()" method="" action="">
+              <div class="columns large-1">
+                <input ng-model="shctrl.newShow.rating" type="text" name="add-show-rating-text-input" value="" placeholder="10" required/>
+              </div>
+              <div class="columns large-7">
+                <input ng-model="shctrl.newShow.name" type="text" name="add-show-name-text-input" value="" placeholder="Show name" required/>
+              </div>
+              <div class="columns large-2">
+                <input class="small secondary button" type="submit" name="add-show-name-submit-button" value="Add"/>
+              </div>
+            </form>
+          </div>
+        </li>
+
+        <li ng-cloak ng-repeat="show in shctrl.shows" class="tv-or-radio-show">
+          <div class="row">
+            <div class="columns large-1">
+              <p>{{show.rating}}</p>
+            </div>
+            <div class="columns large-9">
+              <a class="show-show" ng-click="shctrl.setCurrentShowInfo(show)" onclick="$('#show-info-modal').foundation('reveal', 'open')" href="#">{{show.name}}</a>
+            </div>
+            <div class="columns large-2">
+              <a class="show-delete" href="#" ng-click="shctrl.removeShow($index);">Delete</a>
+            </div>
+          </div>
+        </li>
+
+        <div id="show-info-modal" class="medium reveal-modal" data-reveal data-options="animation_speed: 0; close_on_background_click: true;">
+          <h1>Show Info</h1>
+          <p>Here is some show info.</p>
+          <p>Name: {{shctrl.currentShowInfo.name}}</p>
+          <p>Rating: {{shctrl.currentShowInfo.rating}}</p>
+
+          <a class="close-reveal-modal">&#215;</a>
+        </div>
+
+      </ul>
+    </div>
+
+    <div ng-controller="RoutesCtrl as routesctrl" class="row">
+
+      <div class="row">
+        <div class="columns large-12">
+          <ul class="button-group">
+            <li ng-click="routesctrl.setSubPage(route.templateUrl)" ng-repeat="route in routesctrl.routes"><a class="small secondary button" href="#{{route.path}}">{{route.description}}</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="row view-frame" ng-include="routesctrl.subPage"></div>
+      </div>
+    </div>
+
+    <div ng-controller="apiUsageCtrl as apictrl" class="row">
+      <div class="row">
+        <h1>External API Usage</h1>
+        <h2>Arbitrary GET Request</h2>
+        <div class="columns large-12">
+
+          <form ng-submit="apictrl.retrieveData()" method="" id="" action="">
+            <div class="row collapse">
+              <div class="columns large-11">
+                <input ng-model="apictrl.getURL" type="text" name="" value="" placeholder="http://headers.jsontest.com/"/>
+              </div>
+              <div class="columns large-1">
+                <input class="secondary button postfix" type="submit" name="" value="GET" />
+              </div>
+            </div>
+          </form>
+
+          <div class="row">
+            <div class="columns large-7">
+              <div id="api-response-pre" ng-cloak ng-show="apictrl.dataRetrieved" class="model-pre-container">
+                <pre class="model-pre">{{apictrl.retrievedData | json}}</pre>
+              </div>
+
+              <div class="row">
+                <div id="api-not-retrieved-placeholder" class="columns large-5 large-centered">
+                  <pre ng-hide="apictrl.dataRetrieved">RESPONSE DATA</pre>
+                </div>
+              </div>
+
+            </div>
+            <div class="columns large-1">
+              <p class="secondary label radius" ng-cloak ng-show="apictrl.dataRetrieved">{{apictrl.responseStatus}}</p>
+            </div>
+            <div class="columns large-4">
+              <h4>Examples</h4>
+              <ul ng-cloak class="no-bullet chevron">
+                <li ng-repeat="url in apictrl.exampleURLs"><a ng-click="apictrl.retrieveData(url)" href="#">{{url}}</a></li>
+              </ul>
+            </div>
+          </div>
+
+        </div>
+      </div>
+      <div class="row">
+        <h2>GET and POST Examples</h2>
+        <div class="columns large-12">
+          <div class="row">
+
+            <div class="columns large-6">
+              <a ng-click="apictrl.getData()" class="small secondary button" href="#">GET</a>
+
+              <table class="api-table" ng-cloak ng-show="apictrl.headersRetrieved">
+                <tr>
+                  <th>Field</th>
+                  <th>Value</th>
+                </tr>
+                <tr class="api-table-row" ng-repeat="header in apictrl.retrievedHeaders">
+                  <td>{{header.field}}</td>
+                  <td>{{header.value}}</td>
+                </tr>
+              </table>
+            </div>
+
+            <div class="columns large-6">
+              <a ng-click="apictrl.postData()" class="small secondary button" href="#">POST</a>
+
+              <table class="api-table" ng-cloak ng-show="apictrl.postResponseRetrieved">
+                <tr>
+                  <th>Field</th>
+                  <th>Value</th>
+                </tr>
+                <tr class="api-table-row" ng-repeat="responseField in apictrl.postResponseData">
+                  <td>{{responseField.field}}</td>
+                  <td>{{responseField.value}}</td>
+                </tr>
+              </table>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div ng-controller="UserCtrl as user" class="row">
+      <h1>Simple AngularJS Test</h1>
+
+      <div class="panel radius columns large-6">
+        <h2>Input</h2>
+
+        <form data-abide ng-submit="user.userNameSubmit()" method="" id="" action="">
+          <label for="user-name-input">Your name</label>
+          <input ng-model="user.userName" required pattern="[a-zA-Z0-9]+" type="text" name="user-name-input" placeholder="John Doe"/>
+          <input type="submit" class="button small" name="" value="Set" />
+        </form>
+      </div>
+      <div class="columns large-6">
+        <h2>Output</h2>
+        <div data-alert ng-cloak ng-show="user.userHasSubmitted" ng-bind-template="{{user.successMessage}}" class="alert-box {{user.messageType}} radius">
+          <!-- <a href="#" class="close">&times;</a> -->
+        </div>
+        <p ng-cloak>Hello {{user.userName}}!</p>
+
+      </div>
+    </div>
+
+    <div ng-controller="colorCtrl as cctrl" class="row">
+      <div style="background-color: {{cctrl.selectedColor}};" class="columns large-6">
+        <h2>Colors</h2>
+        <a ng-click="cctrl.retrieveColors()" href="" class="button small secondary">Retrieve colors</a>
+        <ul class="inline-list">
+          <li ng-cloak ng-repeat="color in cctrl.colors" ng-click="cctrl.selectColor(color)" style="background-color:{{color}};" class="secondary round label"><a href="">{{color}}</a></li>
+        </ul>
+      </div>
+      <div class="columns large-6">
+        <h2>Animals</h2>
+        <a ng-click="cctrl.retrieveAnimals()" href="" class="button small secondary">Retrieve animals</a>
+
+        <div ng-cloak ng-show="cctrl.animals.length > 0" class="row">
+          <div class="large-7 columns">
+            <input type="text" ng-model="cctrl.animalSortOrder" name="" value="" placeholder="Animal name or confidence"/>
+          </div>
+          <div class="large-5 columns">
+            <label for="animal-search-confidence-checkbox">
+              <input ng-model="cctrl.includeConfidenceInAnimalSearch" type="checkbox" id="animal-search-confidence-checkbox" >
+              <span class="">Search confidence</span>
+            </label>
+          </div>
+        </div>
+
+        <ul>
+          <li ng-cloak ng-repeat="animal in cctrl.animals | animalSearch:cctrl.animalSortOrder:cctrl.includeConfidenceInAnimalSearch">{{animal.name}}: {{animal.confidence | confidence}}</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="columns large-12">
+        <h2>Routing</h2>
+        <ul class="button-group radius">
+          <li><a class="button small secondary" href="#/settings">Settings</a></li>
+          <li><a class="button small secondary" href="#/info/1">Info #1</a></li>
+          <li><a class="button small secondary" href="#/info/2">Info #2</a></li>
+          <li><a class="button small secondary" href="#/info/3">Info #3</a></li>
+        </ul>
+        <div ng-view class="view-frame"></div>
+      </div>
+    </div>
+
+    <div ng-controller="diverseCtrl as dictrl" class="row">
+      <h2>Resources</h2>
+      <div class="columns large-6">
+        <h3>Editable</h3>
+        <table>
+          <tr>
+            <th>ID</th>
+            <th>Married</th>
+            <th>Name</th>
+            <th>Sons</th>
+            <th>Daughters</th>
+          </tr>
+          <tr ng-repeat="diverse in dictrl.diverse">
+            <td>{{diverse.id}}</td>
+            <td>{{diverse.married}}</td>
+            <td><div class="clickable" ng-show="!dictrl.enabledEditors[diverse.id]" ng-click="dictrl.enableInlineEditor(diverse.name, diverse.id)">{{diverse.name}}</div>
+              <div class="animated-item" ng-show="dictrl.enabledEditors[diverse.id]">
+                <input ng-model="dictrl.editableTexts[diverse.id]" type="text" />
+                <a class="tiny button" href="#" ng-click="dictrl.save(diverse.id)">Save</a>
+                or
+                <a class="tiny secondary button"  href="#" ng-click="dictrl.disableInlineEditor(diverse.id)">Cancel</a>
+            </div></td>
+            <td>{{diverse.sons.length}}</td>
+            <td>{{diverse.daughters.length}}</td>
+          </tr>
+        </table>
+      </div>
+      <div class="columns large-6">
+        <h3>Model</h3>
+        <div class="model-pre-container">
+          <pre class="model-pre">{{dictrl.currentModel | json}}</pre>
+        </div>
+      </div>
+    </div>
+
+    <div ng-controller="customerCtrl as cusctrl" class="row">
+      <h2>Form validation</h2>
+      <div class="columns large-6">
+        <form ng-hide="cusctrl.showFlashMessage" data-abide ng-submit="cusctrl.submitCustomerData()">
+
+          <h3>Form</h3>
+
+          <div class="row">
+
+            <div class="columns large-6">
+              <label for="customer-first-name">First Name</label>
+              <input id="customer-first-name" type="text" ng-model="cusctrl.customer.firstName" pattern="[a-zA-Z0-9]+" required/>
+            </div>
+
+            <div class="columns large-6">
+              <label for="customer-last-name">Last Name</label>
+              <input id="customer-last-name" type="text" ng-model="cusctrl.customer.lastName" pattern="[a-zA-Z0-9]+" required/>
+            </div>
+
+          </div>
+
+          <div class="row">
+
+            <div class="columns large-4">
+              <label for="customer-company">Company</label>
+              <input id="customer-company" type="text" ng-model="cusctrl.customer.company" pattern="[a-zA-Z0-9]+" required/>
+            </div>
+
+            <div class="columns large-4">
+              <label for="customer-country">Country</label>
+              <input id="customer-country" type="text" ng-model="cusctrl.customer.country" pattern="[a-zA-Z0-9]+" required/>
+            </div>
+
+            <div class="columns large-4">
+              <label for="customer-phone">Phone</label>
+              <input id="customer-phone" type="text" ng-model="cusctrl.customer.phone" pattern="[0-9]+" required/>
+            </div>
+
+          </div>
+
+          <div class="row">
+
+            <div class="columns large-4">
+              <label for="customer-price-cathegory">Price Cathegory</label>
+              <select id="customer-price-cathegory" ng-model="cusctrl.customer.priceCathegory" required>
+                <option ng-repeat="priceCathegory in cusctrl.priceCathegories">{{priceCathegory}}</option>
+              </select>
+            </div>
+
+            <div class="columns large-6">
+
+              <div class="row">
+                <label for="customer-get-weekly-updates">
+                  <input type="checkbox" ng-model="cusctrl.customer.getWeeklyUpdates" id="customer-get-weekly-updates"/>
+                  <span>Get weekly updates</span>
+                </label>
+              </div>
+
+              <div class="row">
+                <label for="customer-send-analytics-data">
+                  <input type="checkbox" ng-model="cusctrl.customer.sendAnalyticsData" id="customer-send-analytics-data"/>
+                  <span>Send analytics data</span>
+                </label>
+              </div>
+
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="columns large-12">
+              <label for="employees-number-list">Number of employees</label>
+              <ul id="employees-number-list" class="inline-list">
+                <li ng-repeat="employeeNumber in cusctrl.employeeNumbers">
+                  <label class="inline" for="customer-employeeNumbers-{{employeeNumber}}">
+                    <input type="radio" id="customer-emloyeeNumbers-{{employeeNumber}}" ng-model="cusctrl.customer.employeeNumber" value="{{employeeNumber}}"/>
+                    <span>{{employeeNumber}}</span>
+                  </label>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="columns large-12">
+              <label for="customer-comment">Comment</label>
+              <textarea ng-model="cusctrl.customer.comment" id="customer-comment" rows="50" cols="8"  pattern="[0-9]+" required></textarea>
+            </div>
+          </div>
+
+          <input type="submit" class="button small secondary" name="" value="OK" />
+        </form>
+
+        <div id="customer-flash-message" ng-show="cusctrl.showFlashMessage" class="panel">
+          <p>Welcome, {{cusctrl.customer.firstName}} {{cusctrl.customer.lastName}}!</p>
+          <p>Your price cathegory: {{cusctrl.customer.priceCathegory}}</p>
+        </div>
+
+      </div>
+
+
+      <div class="columns large-6">
+        <h3>Model</h3>
+        <div class=" model-pre-container">
+          <pre class="model-pre">
+            {{cusctrl.customer | json}}
+          </pre>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="row">
+      <h1>Directives</h1>
+      <div class="columns large-12">
+
+        <div class="row">
+          <h2>Example 1 (selfdocumenting)</h2>
+          <selfdocumenting>
+            <h3>Info</h3>
+            <p>Foobar</p>
+            <ul>
+              <li>one</li>
+              <li>one</li>
+              <li>one</li>
+              <li>one</li>
+            </ul>
+          </selfdocumenting>
+        </div>
+
+        <div class="row">
+          <h2>Example 2 (selfdocumenting)</h2>
+          <selfdocumenting>
+            <h3>Info</h3>
+            <p>This element should be self-documenting.</p>
+            <h3>Datapoints</h3>
+            <ul ng-controller="dataCtrl as dctrl" class="square">
+              <li ng-repeat="datapoint in dctrl.datapoints">{{datapoint.value}}</li>
+            </ul>
+          </selfdocumenting>
+        </div>
+
+      </div>
+    </div>
+
+
+    <div ng-controller="evalCtrl as evctrl" class="row">
+      <h1>Evaluate Arbitrary JavaScript</h1>
+      <div class="columns large-6">
+        <form ng-submit="evctrl.evalJS()" method="" id="" action="">
+          <input ng-model="evctrl.arbitraryJS" type="text" name="" value="" placeholder="JS expression"/>
+          <input  class="small secondary button" type="submit" name="" value="Evaluate" />
+        </form>
+      </div>
+      <div class="columns large-6">
+        <div class="model-pre-container">
+          <pre class="small model-pre">{{evctrl.evaluatedJS}}</pre>
+        </div>
+      </div>
+    </div>
+
+    <div ng-controller="WindowCtrl as winctrl" class="row">
+      <div class="class large-12">
+        <h2><code>$window</code> service</h2>
+
+        <div ng-hide="winctrl.doShowWindowObject" class="columns large-3 large-centered">
+          <a ng-click="winctrl.serializeWindowObject();" class="small secondary button" href="#">Show me the <code>$window</code> object!</a>
+        </div>
+
+        <div ng-hide="winctrl.doShowWindowObjectKeys" class="columns large-3 large-centered">
+          <a ng-click="winctrl.serializeWindowObjectKeys();" class="small secondary button" href="#">Show me the <code>$window</code> object keys!</a>
+        </div>
+
+        <div class="row">
+          <div ng-show="winctrl.doShowWindowObject" ng-cloak class="columns large-12 large-centered">
+            <p><code>$window</code> object:</p>
+            <div id="window-object-pre"  class="model-pre-container">
+              <pre class="model-pre">{{winctrl.windowObject | json}}</pre>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div ng-show="winctrl.doShowWindowObjectKeys" ng-cloak class="columns large-12 large-centered">
+            <p><code>$window</code> object keys:</p>
+            <div id="window-object-pre" class="model-pre-container">
+              <pre class="model-pre">{{winctrl.windowObjectKeys | json}}</pre>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+
+    <script type="text/javascript" src="res/js/controllers.js"></script>
+    <script type="text/javascript" src="res/js/infos.js"></script>
+    <script type="text/javascript" src="res/js/diverseService.js"></script>
+    <script type="text/javascript" src="res/js/filters.js"></script>
+    <script type="text/javascript" src="res/js/selfDocumenting.js"></script>
+    <script type="text/javascript" src="res/js/jquery-1.9.1.js"></script>
+    <script type="text/javascript" src="res/js/foundation.min.js"></script>
+    <script type="text/javascript" src="res/js/foundation.abide.js"></script>
+    <script type="text/javascript" src="res/js/foundation.tooltip.js"></script>
+    <script type="text/javascript" src="res/js/foundation.reveal.js"></script>
+
+    <script type="text/javascript">
+      $(document).ready(function() {
+	$(document).foundation();
+      });
+    </script>
+  </body>
+</html>

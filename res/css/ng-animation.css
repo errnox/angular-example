@@ -1,0 +1,197 @@
+/*************************************************************************/
+/* Window object */
+/*************************************************************************/
+
+#window-object-pre.ng-hide-remove {
+  animation: windowObjectPreHideAnimation 2s ease-out;
+}
+
+@keyframes windowObjectPreHideAnimation {
+  from { opacity: 0; }
+}
+
+
+/*************************************************************************/
+/* API test */
+/*************************************************************************/
+
+#api-response-pre.ng-hide-remove {
+  animation: apiResponsePreShowAnimation 350ms ease-out;
+}
+
+@keyframes apiResponsePreShowAnimation {
+  from { transform: translate(0, -10px); opacity: 0; }
+}
+
+#api-response-pre .model-pre.ng-move,
+#api-response-pre .model-pre.ng-enter {
+  animation: apiResponsePreContentAnimation 700ms ease-out;
+}
+
+@keyframes apiResponsePreContentAnimation {
+  from { opacity: 0; }
+}
+
+
+/*************************************************************************/
+/* Header table animation */
+/*************************************************************************/
+
+.api-table.ng-hide-remove {
+  animation: apiTableShowAnimation 350ms ease-out;
+}
+
+@keyframes apiTableShowAnimation {
+  from { transform: translate(0, -10px); opacity: 0; }
+}
+
+.api-table-row.ng-enter, .api-table-row.ng-move {
+  animation: apiTableRowShowAnimation 700ms ease-out;
+}
+
+@keyframes apiTableRowShowAnimation {
+  from { opacity: 0; }
+}
+
+
+/*************************************************************************/
+/* Shows animation */
+/*************************************************************************/
+
+.tv-or-radio-show.ng-enter {
+  animation: tvOrRadioShowEnterAnimation 500ms ease-out;
+}
+
+@keyframes tvOrRadioShowEnterAnimation {
+  from {
+    background-color: #FFFF00;
+    opacity: 0;
+  }
+}
+
+.tv-or-radio-show.ng-leave {
+  animation: tvOrRadioShowLeaveAnimation 500ms ease-out;
+}
+
+@keyframes tvOrRadioShowLeaveAnimation {
+  from {
+    background-color: #FF9999;
+  }
+  to { opacity: 0; }
+}
+
+
+#add-new-show-form.ng-hide-remove {
+  display: block !important;
+  animation: addNewShowFormShowAnimation 500ms ease-out;
+}
+
+@keyframes addNewShowFormShowAnimation {
+  from {
+    opacity: 0;
+  }
+  to { display: block !important; opacity: 1; }
+}
+
+/*************************************************************************/
+/* Customer flash message animation */
+/*************************************************************************/
+
+#customer-flash-message.ng-hide-add,
+#customer-flash-message.ng-hide-remove {
+  display: block !important;
+  animation: 0.6s ease-out customerFlashMessageAnimation;
+}
+
+@keyframes customerFlashMessageAnimation {
+  from { opacity: 0; }
+  to {  }
+}
+
+
+/*************************************************************************/
+/* Routing view animation */
+/*************************************************************************/
+
+.view-frame.ng-enter {
+  -webkit-animation: viewFrameAnimation 350ms ease-out;
+  -moz-animation: viewFrameAnimation 350ms ease-out;
+  -o-animation: viewFrameAnimation 350ms ease-out;
+  animation: viewFrameAnimation 350ms ease-out;
+}
+
+@-webkit-keyframes viewFrameAnimation {
+  from {
+    -webkit-transform: translate(50px, 0);
+    -moz-transform: translate(50px, 0);
+    -o-transform: translate(50px, 0);
+    transform: translate(50px, 0);
+    opacity: 0;
+  };
+  to { };
+}
+
+@-moz-keyframes viewFrameAnimation {
+  from {
+    -webkit-transform: translate(50px, 0);
+    -moz-transform: translate(50px, 0);
+    -o-transform: translate(50px, 0);
+    transform: translate(50px, 0);
+    opacity: 0;
+  };
+  to { };
+}
+
+@-o-keyframes viewFrameAnimation {
+  from {
+    -webkit-transform: translate(50px, 0);
+    -moz-transform: translate(50px, 0);
+    -o-transform: translate(50px, 0);
+    transform: translate(50px, 0);
+    opacity: 0;
+  };
+  to { };
+}
+
+@keyframes viewFrameAnimation {
+  from {
+    -webkit-transform: translate(50px, 0);
+    -moz-transform: translate(50px, 0);
+    -o-transform: translate(50px, 0);
+    transform: translate(50px, 0);
+    opacity: 0;
+  };
+  to { };
+}
+
+.view-frame {
+  padding: 10px;
+}
+
+
+/*************************************************************************/
+/* AngularJS-specific animation */
+/*************************************************************************/
+
+/* .animated-item.ng-hide-add, */
+.animated-item.ng-hide-remove {
+  -webkit-transition: 0.2s linear all;
+  -moz-transition: 0.2s linear all;
+  -o-transition: 0.2s linear all;
+  transition: 0.2s linear all;
+  opacity: 0;
+  display: block !important;
+}
+
+.animated-item.ng-hide {
+  -webkit-transform: scale(1.2);
+  -moz-transform: scale(1.2);
+  -o-transform: scale(1.2);
+  transition: 0.2s linear all;
+  opacity: 1;
+}
+
+/* .animated-item.ng-hide-remove-active, */
+/* .animated-item.ng-hide-add-active { */
+/*   opacity: 1; */
+/* } */
